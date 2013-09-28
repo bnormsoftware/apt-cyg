@@ -41,7 +41,7 @@ function usage()
   echo "  \"apt-cyg remove <package names>\" to remove packages"
   echo "  \"apt-cyg update\" to update setup.ini"
   echo "  \"apt-cyg show\" to show installed packages"
-  echo "  \"apt-cyg find <patterns>\" to find packages matching patterns"
+  echo "  \"apt-cyg find|search <patterns>\" to find packages matching patterns"
   echo "  \"apt-cyg describe <patterns>\" to describe packages matching patterns"
   echo "  \"apt-cyg packageof <commands or files>\" to locate parent packages"
   echo "Options:"
@@ -51,6 +51,8 @@ function usage()
   echo "  --noupdate, -u     : don't update setup.ini from mirror"
   echo "  --help"
   echo "  --version"
+  echo ""
+  echo "Tips: alias apt-get='apt-cyg'; alias apt-cache='apt-cyg'"
 }
 
 
@@ -191,7 +193,7 @@ do
       shift
     ;;
 
-    update|show|find|describe|packageof|install|src|remove)
+    update|show|find|search|describe|packageof|install|src|remove)
       if test "-$command-" = "--"
       then
         command=$1
@@ -242,7 +244,7 @@ case "$command" in
   ;;
 
 
-  find)
+  find|search)
 
     checkpackages
     findworkspace
