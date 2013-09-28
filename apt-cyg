@@ -80,11 +80,23 @@ function findworkspace()
   then
     tmp="`head -1 /etc/setup/last-cache`"
     cache="`cygpath -au "$tmp"`"
+  elif test -e /etc/setup/setup.rc
+  then
+    tmp="`awk -e '{ if (found) { print $1 ; exit } } /^last-cache/ { found = 1 }' </etc/setup/setup.rc`"
+    case "$tmp" in
+      [A-Za-z]:*) cache="`cygpath -au "$tmp"`" ;;
+    esac
   fi
   
   if test -e /etc/setup/last-mirror
   then
     mirror="`head -1 /etc/setup/last-mirror`"
+  elif test -e /etc/setup/setup.rc
+  then
+    tmp="`awk -e '{ if (found) { print $1 ; exit } } /^last-mirror/ { found = 1 }' </etc/setup/setup.rc`"
+    case "$tmp" in
+      http*|ftp*) mirror="$tmp" ;;
+    esac
   fi
   mirrordir="`echo "$mirror" | sed -e "s/:/%3a/g" -e "s:/:%2f:g"`"
   
