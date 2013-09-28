@@ -37,6 +37,7 @@ function usage()
 {
   echo apt-cyg: Installs and removes Cygwin packages.
   echo "  \"apt-cyg install <package names>\" to install packages"
+  echo "  \"apt-cyg src <package names>\" to fetch the sources of packages"
   echo "  \"apt-cyg remove <package names>\" to remove packages"
   echo "  \"apt-cyg update\" to update setup.ini"
   echo "  \"apt-cyg show\" to show installed packages"
@@ -183,7 +184,7 @@ do
       shift
     ;;
 
-    update|show|find|describe|packageof|install|remove)
+    update|show|find|describe|packageof|install|src|remove)
       if test "-$command-" = "--"
       then
         command=$1
@@ -288,6 +289,46 @@ case "$command" in
           echo Found $key in the package $package
         fi
       done
+    done
+
+  ;;
+
+
+  src)
+
+    checkpackages
+    findworkspace
+    getsetup
+
+    for pkg in $packages
+    do
+
+    mkdir -p "/usr/src/$pkg"
+    cat setup.ini | awk > "/usr/src/$pkg/desc" -v package="$pkg" \
+      'BEGIN{RS="\n\n@ "; FS="\n"} {if ($1 == package) {desc = $0; px++}} \
+       END {if (px == 1 && desc != "") print desc; else print "Package not found"}'
+    desc=`cat "/usr/src/$pkg/desc"`
+
+    if test "-$desc-" = "-Package not found-"
+    then
+      echo Package $pkg not found or ambiguous name, exiting
+      rm -r "/usr/src/$pkg"
+      exit 1
+    fi
+    echo Found package $pkg
+
+    pkgsrc=`cat "/usr/src/$pkg/desc" | awk '/^source: / { print $2; exit }'`
+
+    if test "-$pkgsrc-" = "--"
+    then
+      echo "Could not find \"source\" in package description: obsolete package?"
+      exit 1
+    fi
+
+    cd "/usr/src/$pkg"
+    wget -nc $mirror/$pkgsrc
+    rm "/usr/src/$pkg/desc"
+
     done
 
   ;;
