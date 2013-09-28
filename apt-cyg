@@ -451,6 +451,7 @@ case "$command" in
       echo Running postinstall scripts
       for script in /etc/postinstall/*.sh
       do
+	    chmod +x $script
         $script
         mv $script $script.done
       done
@@ -497,6 +498,7 @@ case "$command" in
 
     if test -e "/etc/preremove/$pkg.sh"
     then
+	  chmod +x "/etc/preremove/$pkg.sh"
       "/etc/preremove/$pkg.sh"
       rm "/etc/preremove/$pkg.sh"
     fi
