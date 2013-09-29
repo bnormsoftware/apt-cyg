@@ -4,6 +4,7 @@
 # apt-cyg: install tool for cygwin similar to debian apt-get
 # 
 # Copyright (C) 2005-9, Stephen Jungels
+# Copyright (C) 2013, Brian Norman
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -49,9 +50,9 @@ function usage()
   echo "  --cache, -c <dir>  : set cache"
   echo "  --file, -f <file>  : read package names from file"
   echo "  --noupdate, -u     : don't update setup.ini from mirror"
-  echo "  --ignore-case, -i  : Ignore case distinctions in <patterns> when finding packages"
-  echo "  --help"
-  echo "  --version"
+  echo "  --ignore-case, -i  : ignore case distinctions in <patterns> when finding packages"
+  echo "  --help, ?          : shows the usage"
+  echo "  --version          : shows version information"
   echo ""
   echo "Tips: alias apt-get='apt-cyg'; alias apt-cache='apt-cyg'"
 }
@@ -60,10 +61,10 @@ function usage()
 
 function version()
 {
-  echo "apt-cyg version 0.57"
-  echo "Written by Stephen Jungels"
+  echo "apt-cyg version 0.6"
+  echo "Written by Stephen Jungels and Brian Norman"
   echo ""
-  echo "Copyright (c) 2005-9 Stephen Jungels.  Released under the GPL."
+  echo "Copyright (c) 2013 Brian Norman.  Released under the GPL."
 }
 
 
@@ -190,7 +191,7 @@ do
       shift
     ;;
 
-    --help)
+    --help|?)
       usage
       exit 0
     ;;
